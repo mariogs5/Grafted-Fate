@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<save_state>
+	<input />
+	<window />
+	<textures />
+	<audio />
+	<:anonymous />
+	<scenelogo />
+	<scenetitle />
+	<scene />
+	<scenedeath />
+	<entitymanager>
+		<player x="139" y="800" />
+	</entitymanager>
+	<map />
+	<:anonymous />
+	<renderer>
+		<camera x="0" y="-128" />
+	</renderer>
+</save_state>
