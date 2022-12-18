@@ -42,6 +42,8 @@ F6 -> Load the previous state
 
 F7 -> Instantly death / revive
 
-F9 -> View colliders
+F9 -> View colliders / Pathfinding logic
 
 F10 -> God mode 
+
+F11 -> 30 FPS cap
