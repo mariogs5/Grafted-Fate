@@ -50,13 +50,15 @@ bool SceneDeath::PreUpdate()
 // Called each loop iteration
 bool SceneDeath::Update(float dt)
 {
+	app->render->camera.x = 0;
+	app->render->camera.y = 0;
 	app->entityManager->Disable();
-	app->render->DrawTexture(Fondo, 0, 128);
+	app->render->DrawTexture(Fondo, 0, 0);
 
 	//Fade to black
 	if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
 
-		app->fade->Fade(this, (Module*)app->scenelogo, dt);
+		app->fade->Fade(this, (Module*)app->scenelogo, 0);
 
 	}
 

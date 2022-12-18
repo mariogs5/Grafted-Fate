@@ -38,6 +38,7 @@ public:
 	//L02: DONE 3: Declare a Player attribute 
 	Player* player;
 	SDL_Texture* Fondo = nullptr;
+	pugi::xml_node parameters;
 
 private:
 	SDL_Texture* img;

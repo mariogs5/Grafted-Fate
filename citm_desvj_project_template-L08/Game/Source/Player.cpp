@@ -2,6 +2,7 @@
 #include "App.h"
 #include "Textures.h"
 #include "Audio.h"
+#include "FadeToBlack.h"
 #include "Input.h"
 #include "Render.h"
 #include "Scene.h"
@@ -131,9 +132,6 @@ bool Player::Start() {
 	// L07 DONE 7: Assign collider type
 	pbody->ctype = ColliderType::PLAYER;
 
-	//initialize audio effect - !! Path is hardcoded, should be loaded from config.xml
-	//pickCoinFxId = app->audio->LoadFx("Assets/Audio/Fx/retro-video-game-coin-pickup-38299.ogg");
-
 	//Animacion por la que empieza
 
 	currentAnimation = &idle_right;
@@ -143,10 +141,8 @@ bool Player::Start() {
 
 bool Player::Update()
 {
-
 	// L07 DONE 5: Add physics to the player - updated player position using physics
-
-	
+	// 
 	//L02: DONE 4: modify the position of the player using arrow keys and render the texture
 	
 	if (Anim_right) {
@@ -165,7 +161,7 @@ bool Player::Update()
 
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
-		app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(32),PIXEL_TO_METERS(800) }, 0);
+		app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(32),PIXEL_TO_METERS(820) }, 0);
 	}
 
 	//Load actual level start
@@ -173,7 +169,7 @@ bool Player::Update()
 
 		app->render->camera.x = 0;
 		app->render->camera.y = 0;
-		app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(32),PIXEL_TO_METERS(800) }, 0);
+		app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(32),PIXEL_TO_METERS(820) }, 0);
 	}
 
 	//God mode
@@ -214,11 +210,6 @@ bool Player::Update()
 				Anim_right = true;
 			}
 
-			if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-
-				//app->render->camera.y = -app->scene->player->position.y + 550;
-			}
-
 			if (jumps < 2) {
 
 				if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
@@ -228,7 +219,6 @@ bool Player::Update()
 					JumpAnim = true;
 
 				}
-
 			}
 
 			if (JumpAnim) {
@@ -265,15 +255,27 @@ bool Player::Update()
 
 				currentAnimation = &death_right;
 
+				if (currentAnimation->HasFinished()) {
+
+					app->fade->Fade((Module*)app->scene, (Module*)app->scenedeath, 0);
+					
+					currentAnimation->Reset();
+				}
+
 				if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN && currentAnimation->HasFinished()) {
 
-					currentAnimation->Reset();
 					Alive = true;
 				}
 			}
 			else {
 
 				currentAnimation = &death_left;
+
+				if (currentAnimation->HasFinished()) {
+
+					app->fade->Fade((Module*)app->scene, (Module*)app->scenedeath, 0);
+					
+				}
 
 				if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN && currentAnimation->HasFinished()) {
 
@@ -336,17 +338,33 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 
 	switch (physB->ctype)
 	{
-		case ColliderType::ITEM:
-			LOG("Collision ITEM");
-			app->audio->PlayFx(pickCoinFxId);
-			break;
+		
 		case ColliderType::PLATFORM:
 			LOG("Collision PLATFORM");
 			jumps = 0;
 			JumpAnim = false;
 			break;
+
+		case ColliderType::CEILING:
+			LOG("Collision CEILING");
+			break;
+
+		case ColliderType::WALL:
+			LOG("Collision WALL");
+			break;
+
+		case ColliderType::KILL:
+			LOG("Collision KILL");
+			Alive = false;
+			break;
+
 		case ColliderType::UNKNOWN:
 			LOG("Collision UNKNOWN");
+			break;
+
+		case ColliderType::ITEM:
+			LOG("Collision ITEM");
+			app->audio->PlayFx(pickCoinFxId);
 			break;
 	}
 	

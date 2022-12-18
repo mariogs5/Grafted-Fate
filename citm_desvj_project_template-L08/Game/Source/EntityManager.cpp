@@ -1,5 +1,6 @@
 #include "EntityManager.h"
 #include "Player.h"
+#include "Enemy.h"
 #include "Item.h"
 #include "App.h"
 #include "Textures.h"
@@ -90,6 +91,10 @@ Entity* EntityManager::CreateEntity(EntityType type)
 		entity = new Player();
 		break;
 
+	case EntityType::ENEMY:
+		entity = new Enemy();
+		break;
+
 	case EntityType::ITEM:
 		entity = new Item();
 		break;
@@ -142,12 +147,38 @@ bool EntityManager::LoadState(pugi::xml_node& data) {
 
 	app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(x),PIXEL_TO_METERS(y)}, 0);
 
+	ListItem<Enemy*>* item;
+	pugi::xml_node enemy = data.child("enemy");
+
+	for (item = app->scene->Enemies.start; item != NULL; item = item->next, enemy = enemy.next_sibling("enemy")) {
+		
+		float x = enemy.attribute("x").as_int();
+		float y = enemy.attribute("y").as_int();
+		item->data->pbody->body->SetTransform({ PIXEL_TO_METERS(x),PIXEL_TO_METERS(y) }, 0);
+		item->data->Detectpbody->body->SetTransform({ PIXEL_TO_METERS(x),PIXEL_TO_METERS(y) }, 0);
+
+	}
+
 	return true;
 }
 
 bool EntityManager::SaveState(pugi::xml_node& data) {
 
 	pugi::xml_node player = data.append_child("player");
+
+	ListItem<Enemy*>* item;
+	
+	for (item = app->scene->Enemies.start; item != NULL; item = item->next) {
+
+		pugi::xml_node enemy = data.append_child("enemy");
+
+		int posx, posy;
+		item->data->pbody->GetPosition(posx, posy);
+		
+		enemy.append_attribute("x") = posx;
+		enemy.append_attribute("y") = posy;
+
+	}
 
 	player.append_attribute("x") = app->scene->player->position.x;
 	player.append_attribute("y") = app->scene->player->position.y;

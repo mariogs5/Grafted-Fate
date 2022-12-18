@@ -140,7 +140,7 @@ PhysBody* Physics::CreateCircle(int x, int y, int radious, bodyType type)
 	return pbody;
 }
 
-PhysBody* Physics::CreateRectangleSensor(int x, int y, int width, int height, bodyType type)
+PhysBody* Physics::CreateRectangleSensor(int x, int y, int width, int height, bodyType type, ColliderType ctype)
 {
 	// Create BODY at position x,y
 	b2BodyDef body;
@@ -172,11 +172,44 @@ PhysBody* Physics::CreateRectangleSensor(int x, int y, int width, int height, bo
 	pbody->width = width;
 	pbody->height = height;
 
+	pbody->ctype = ctype;
 	// Return our PhysBody class
 	return pbody;
 }
 
-PhysBody* Physics::CreateChain(int x, int y, int* points, int size, bodyType type)
+PhysBody* Physics::CreateCircleSensor(int x, int y, int radious, bodyType type, ColliderType ctype) {
+
+	b2BodyDef body;
+
+	if (type == DYNAMIC) body.type = b2_dynamicBody;
+	if (type == STATIC) body.type = b2_staticBody;
+	if (type == KINEMATIC) body.type = b2_kinematicBody;
+
+	body.position.Set(PIXEL_TO_METERS(x), PIXEL_TO_METERS(y));
+
+	b2Body* b = world->CreateBody(&body);
+	b2CircleShape circle;
+	circle.m_radius = PIXEL_TO_METERS(radious);
+
+	b2FixtureDef fixture;
+	fixture.shape = &circle;
+	fixture.density = 2.0f;
+	fixture.isSensor = true;
+	b->ResetMassData();
+
+	b->CreateFixture(&fixture);
+
+	PhysBody* pbody = new PhysBody();
+	pbody->body = b;
+	pbody->ctype = ctype;
+	b->SetUserData(pbody);
+	pbody->width = radious * 0.5f;
+	pbody->height = radious * 0.5f;
+
+	return pbody;
+}
+
+PhysBody* Physics::CreateChain(int x, int y, int* points, int size, bodyType type, ColliderType ctype)
 {
 	// Create BODY at position x,y
 	b2BodyDef body;
@@ -211,10 +244,10 @@ PhysBody* Physics::CreateChain(int x, int y, int* points, int size, bodyType typ
 	// Create our custom PhysBody class
 	PhysBody* pbody = new PhysBody();
 	pbody->body = b;
+	pbody->ctype = ctype;
 	b->SetUserData(pbody);
 	pbody->width = pbody->height = 0;
 
-	pbody->ctype = ColliderType::PLATFORM;
 	// Return our PhysBody class
 	return pbody;
 }
@@ -332,6 +365,19 @@ void Physics::BeginContact(b2Contact* contact)
 
 	if (physB && physB->listener != NULL)
 		physB->listener->OnCollision(physB, physA);
+}
+
+void Physics::EndContact(b2Contact* contact) {
+
+	// Call the OnCollision listener function to bodies A and B, passing as inputs our custom PhysBody classes
+	PhysBody* physA = (PhysBody*)contact->GetFixtureA()->GetBody()->GetUserData();
+	PhysBody* physB = (PhysBody*)contact->GetFixtureB()->GetBody()->GetUserData();
+
+	if (physA && physA->listener != NULL)
+		physA->listener->OnCollisionEnd(physA, physB);
+
+	if (physB && physB->listener != NULL)
+		physB->listener->OnCollisionEnd(physB, physA);
 }
 
 //--------------- PhysBody

@@ -24,9 +24,16 @@ enum bodyType {
 };
 
 enum class ColliderType {
-	PLAYER, 
+	PLAYER,
+	ENEMY,
+	ATTACK,
+	DETECTION,
 	ITEM,
-	PLATFORM, 
+	PLATFORM,
+	CEILING,
+	WALL,
+	KILL,
+	CHECK,
 	UNKNOWN
 	// ..
 };
@@ -70,16 +77,18 @@ public:
 	// Create basic physics objects
 	PhysBody* CreateRectangle(int x, int y, int width, int height, bodyType type);
 	PhysBody* CreateCircle(int x, int y, int radious, bodyType type);
-	PhysBody* CreateRectangleSensor(int x, int y, int width, int height, bodyType type);
-	PhysBody* CreateChain(int x, int y, int* points, int size, bodyType type);
+	PhysBody* CreateCircleSensor(int x, int y, int radious, bodyType type, ColliderType ctype);
+	PhysBody* CreateRectangleSensor(int x, int y, int width, int height, bodyType type, ColliderType ctype);
+	PhysBody* CreateChain(int x, int y, int* points, int size, bodyType type, ColliderType ctype);
 	
 	// b2ContactListener ---
 	void BeginContact(b2Contact* contact);
-
-private:
+	void EndContact(b2Contact* contact);
 
 	// Debug mode
 	bool debug;
+
+private:
 
 	// Box2D World
 	b2World* world;

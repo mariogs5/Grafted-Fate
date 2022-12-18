@@ -2,6 +2,7 @@
   <app>
     <title>Game Development Testbed</title>
     <organization>UPC</organization>
+	<frcap value = "16"/>
   </app>
 
   <renderer>
@@ -25,6 +26,9 @@
   <scene>
     
 	<player x="32" y="800" texturepath="Assets/Textures/SpriteSheet2.png"/>
+	<enemy type="walking" x="256" y="448" pos1="256" pos2="600" texturepath="Assets/Textures/WalkingEnemySpritesheet.png"/>
+	<enemy type="walking" x="416" y="800" pos1="416" pos2="704" texturepath="Assets/Textures/WalkingEnemySpritesheet.png"/>
+	<enemy type="flying" x="450" y="700" pos1="416" pos2="750" texturepath="Assets/Textures/FlyingEnemySpritesheet.png"/>
     <!--<item x="256" y="515" texturepath="Assets/Textures/goldCoin.png"/> -->
    
   </scene>

@@ -4,6 +4,8 @@
 #include "Module.h"
 #include "Player.h"
 #include "Item.h"
+#include "List.h"
+#include "Enemy.h"
 
 struct SDL_Texture;
 
@@ -38,11 +40,19 @@ public:
 
 	//L02: DONE 3: Declare a Player attribute 
 	Player* player;
+	List<Enemy*> Enemies;
 	SDL_Texture* Fondo = nullptr;
+	iPoint playertile;
+
+	SDL_Texture* mouseTileTex = nullptr;
+	SDL_Texture* originTex = nullptr;
 
 private:
 	SDL_Texture* img;
 
+	//Debug pathfing
+	iPoint origin;
+	bool originSelected = false;
 };
 
 #endif // __SCENE_H__

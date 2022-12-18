@@ -12,6 +12,7 @@ enum class EntityType
 {
 	PLAYER,
 	ITEM,
+	ENEMY,
 	UNKNOWN
 };
 
@@ -71,6 +72,10 @@ public:
 
 	virtual void OnCollision(PhysBody* physA, PhysBody* physB) {
 	
+	};
+
+	virtual void OnCollisionEnd(PhysBody* physA, PhysBody* physB) {
+
 	};
 
 public:

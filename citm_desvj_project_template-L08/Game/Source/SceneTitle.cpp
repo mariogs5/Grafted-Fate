@@ -7,6 +7,9 @@
 #include "Window.h"
 #include "SceneLogo.h"
 #include "SceneTitle.h"
+#include "Player.h"
+#include "Enemy.h"
+#include "Physics.h"
 #include "Scene.h"
 #include "EntityManager.h"
 #include "Map.h"
@@ -50,13 +53,21 @@ bool SceneTitle::PreUpdate()
 // Called each loop iteration
 bool SceneTitle::Update(float dt)
 {
+	app->render->camera.x = 0;
+	app->render->camera.y = 0;
 	app->entityManager->Disable();
-	app->render->DrawTexture(Fondo,0,128);
+	app->render->DrawTexture(Fondo,0,0);
+
+	
 
 	//Fade to black
 	if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_DOWN) {
 
-		app->fade->Fade(this, (Module*)app->scene, dt);
+		app->scene->player->Alive = true;
+		app->scene->player->pbody->body->SetTransform({ PIXEL_TO_METERS(32),PIXEL_TO_METERS(820) }, 0);
+	
+
+		app->fade->Fade(this, (Module*)app->scene, 0);
 
 	}
 	

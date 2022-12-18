@@ -10,11 +10,15 @@
 	<scene />
 	<scenedeath />
 	<entitymanager>
-		<player x="139" y="800" />
+		<player x="897" y="800" />
+		<enemy x="440" y="457" />
+		<enemy x="657" y="809" />
+		<enemy x="687" y="882" />
 	</entitymanager>
 	<map />
 	<:anonymous />
 	<renderer>
-		<camera x="0" y="-128" />
+		<camera x="-401" y="-128" />
 	</renderer>
+	<pathfinding />
 </save_state>
