@@ -30,6 +30,8 @@ D -> Move right
 
 Space -> Jump / double jump
 
+P -> Open Menu in game
+
 ## Debug keys
 
 F1 -> Start from the first level 
