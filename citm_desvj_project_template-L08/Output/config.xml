@@ -29,7 +29,18 @@
 	<enemy type="walking" x="256" y="448" pos1="256" pos2="600" texturepath="Assets/Textures/WalkingEnemySpritesheet.png"/>
 	<enemy type="walking" x="416" y="800" pos1="416" pos2="704" texturepath="Assets/Textures/WalkingEnemySpritesheet.png"/>
 	<enemy type="flying" x="450" y="700" pos1="416" pos2="750" texturepath="Assets/Textures/FlyingEnemySpritesheet.png"/>
-    <!--<item x="256" y="515" texturepath="Assets/Textures/goldCoin.png"/> -->
+	  
+	<item type ="collectible" x="128" y="800" texturepath="Assets/Textures/Collectible.png"/>
+	<item type ="collectible" x="896" y="800" texturepath="Assets/Textures/Collectible.png"/>
+    <item type ="collectible" x="1504" y="864" texturepath="Assets/Textures/Collectible.png"/>
+	<item type ="collectible" x="1120" y="480" texturepath="Assets/Textures/Collectible.png"/>
+	<item type ="collectible" x="32" y="384" texturepath="Assets/Textures/Collectible.png"/>
+	<item type ="collectible" x="992" y="224" texturepath="Assets/Textures/Collectible.png"/>
+	<item type ="collectible" x="1280" y="120" texturepath="Assets/Textures/Collectible.png"/>
+	  
+	<!--<item type ="health" x="896" y="800" texturepath="Assets/Textures/Health.png"/>
+	<item type ="health" x="864" y="384" texturepath="Assets/Textures/Health.png"/>
+	<item type ="health" x="288" y="128" texturepath="Assets/Textures/Health.png"/>-->
    
   </scene>
 

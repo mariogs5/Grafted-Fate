@@ -10,6 +10,7 @@
 #include "Scene.h"
 #include "SceneDeath.h"
 #include "EntityManager.h"
+#include "GuiManager.h"
 #include "Map.h"
 #include "Physics.h"
 #include "Pathfinding.h"
@@ -38,6 +39,7 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	scene = new Scene(false);
 	scenedeath = new SceneDeath(false);
 	entityManager = new EntityManager(true);
+	guiManager = new GuiManager(true);
 	map = new Map(true);
 	pathfinding = new PathFinding(true);
 
@@ -54,12 +56,15 @@ App::App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(scene);
 	AddModule(scenedeath);
 	AddModule(entityManager);
+	AddModule(pathfinding);
+	AddModule(guiManager);
 	AddModule(map);
 	AddModule(fade);
 
 	// Render last to swap buffer
+	
 	AddModule(render);
-	AddModule(pathfinding);
+
 }
 
 // Destructor

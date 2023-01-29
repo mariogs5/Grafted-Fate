@@ -200,8 +200,8 @@ PhysBody* Physics::CreateCircleSensor(int x, int y, int radious, bodyType type, 
 	b->CreateFixture(&fixture);
 
 	PhysBody* pbody = new PhysBody();
-	pbody->body = b;
 	pbody->ctype = ctype;
+	pbody->body = b;
 	b->SetUserData(pbody);
 	pbody->width = radious * 0.5f;
 	pbody->height = radious * 0.5f;

@@ -5,6 +5,7 @@
 #include"Timer.h"
 #include "Animation.h"
 #include "DynArray.h"
+#include "Audio.h"
 
 struct SDL_Texture;
 

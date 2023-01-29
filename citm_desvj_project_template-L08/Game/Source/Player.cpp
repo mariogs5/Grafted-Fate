@@ -6,6 +6,7 @@
 #include "Input.h"
 #include "Render.h"
 #include "Scene.h"
+#include "Item.h"
 #include "Log.h"
 #include "Point.h"
 #include "Physics.h"
@@ -184,138 +185,144 @@ bool Player::Update()
 
 	
 	//PLAYER MOVEMENT
-	if (!GodMode) {
+	if (app->scene->MenuOn == false && app->scene->SettingsOn == false) {
 
-		b2Vec2 velocity = { 0, pbody->body->GetLinearVelocity().y };
+		if (!GodMode) {
 
-		if (Alive) {
+			b2Vec2 velocity = { 0, pbody->body->GetLinearVelocity().y };
 
-			if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN) {
+			if (Alive) {
 
-				Alive = false;
+				if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN) {
+
+					Alive = false;
+
+				}
+
+				if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
+
+					velocity = { -speed, pbody->body->GetLinearVelocity().y };
+					currentAnimation = &run_left;
+					Anim_right = false;
+				}
+
+				if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
+
+					velocity = { speed, pbody->body->GetLinearVelocity().y };
+					currentAnimation = &run_right;
+					Anim_right = true;
+				}
+
+				if (jumps < 2) {
+
+					if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
+
+						velocity = { pbody->body->GetLinearVelocity().x, -impulse };
+						jumps++;
+						JumpAnim = true;
+
+					}
+				}
+
+				if (JumpAnim) {
+
+					if (Anim_right) {
+
+						currentAnimation = &jump_right;
+
+						if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
+
+							currentAnimation->Reset();
+							currentAnimation = &jump_right;
+						}
+					}
+
+					else {
+
+						currentAnimation = &jump_left;
+
+						if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
+
+							currentAnimation->Reset();
+							currentAnimation = &jump_left;
+						}
+					}
+				}
+			}
+
+			//Death animation
+
+			if (!Alive) {
+
+				if (Anim_right) {
+
+					currentAnimation = &death_right;
+
+					if (currentAnimation->HasFinished()) {
+
+						app->fade->Fade((Module*)app->scene, (Module*)app->scenedeath, 0);
+						app->scene->MenuOn = false;
+						app->scene->SettingsOn = false;
+						currentAnimation->Reset();
+					}
+
+					if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN && currentAnimation->HasFinished()) {
+
+						Alive = true;
+					}
+				}
+				else {
+
+					currentAnimation = &death_left;
+
+					if (currentAnimation->HasFinished()) {
+
+						app->fade->Fade((Module*)app->scene, (Module*)app->scenedeath, 0);
+						app->scene->MenuOn = false;
+						app->scene->SettingsOn = false;
+						currentAnimation->Reset();
+					}
+
+					if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN && currentAnimation->HasFinished()) {
+
+						currentAnimation->Reset();
+						Alive = true;
+					}
+				}
 
 			}
-			
+
+			//Set the velocity of the pbody of the player
+			pbody->body->SetLinearVelocity(velocity);
+		}
+		else {
+
+			//CAMERA MOVEMENT IN GODMODE
 			if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
 
-				velocity = { -speed, pbody->body->GetLinearVelocity().y };
-				currentAnimation = &run_left;
-				Anim_right = false;
+				position.x -= 10;
 			}
 
 			if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
 
-				velocity = { speed, pbody->body->GetLinearVelocity().y };
-				currentAnimation = &run_right;
-				Anim_right = true;
+				position.x += 10;
 			}
 
-			if (jumps < 2) {
+			if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
 
-				if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-
-					velocity = { pbody->body->GetLinearVelocity().x, -impulse };
-					jumps++;
-					JumpAnim = true;
-
-				}
+				position.y -= 10;
 			}
 
-			if (JumpAnim) {
+			if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
 
-				if (Anim_right) {
-
-					currentAnimation = &jump_right;
-
-					if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-
-						currentAnimation->Reset();
-						currentAnimation = &jump_right;
-					}
-				}
-
-				else {
-
-					currentAnimation = &jump_left;
-
-					if (app->input->GetKey(SDL_SCANCODE_SPACE) == KEY_DOWN) {
-
-						currentAnimation->Reset();
-						currentAnimation = &jump_left;
-					}
-				}
+				position.y += 10;
 			}
 		}
 
-		//Death animation
-
-		if (!Alive) {
-
-			if (Anim_right) {
-
-				currentAnimation = &death_right;
-
-				if (currentAnimation->HasFinished()) {
-
-					app->fade->Fade((Module*)app->scene, (Module*)app->scenedeath, 0);
-					
-					currentAnimation->Reset();
-				}
-
-				if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN && currentAnimation->HasFinished()) {
-
-					Alive = true;
-				}
-			}
-			else {
-
-				currentAnimation = &death_left;
-
-				if (currentAnimation->HasFinished()) {
-
-					app->fade->Fade((Module*)app->scene, (Module*)app->scenedeath, 0);
-					
-				}
-
-				if (app->input->GetKey(SDL_SCANCODE_F7) == KEY_DOWN && currentAnimation->HasFinished()) {
-
-					currentAnimation->Reset();
-					Alive = true;
-				}
-			}
-			
-		}
-	
-		//Set the velocity of the pbody of the player
-		pbody->body->SetLinearVelocity(velocity);
-
-		position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
-		position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
-	}
-	else {
-
-		//CAMERA MOVEMENT IN GODMODE
-		if (app->input->GetKey(SDL_SCANCODE_A) == KEY_REPEAT) {
-
-			position.x -= 10;
-		}
-
-		if (app->input->GetKey(SDL_SCANCODE_D) == KEY_REPEAT) {
-
-			position.x += 10;
-		}
-
-		if (app->input->GetKey(SDL_SCANCODE_W) == KEY_REPEAT) {
-
-			position.y -= 10;
-		}
-
-		if (app->input->GetKey(SDL_SCANCODE_S) == KEY_REPEAT) {
-
-			position.y += 10;
-		}
 	}
 	
+	position.x = METERS_TO_PIXELS(pbody->body->GetTransform().p.x) - 16;
+	position.y = METERS_TO_PIXELS(pbody->body->GetTransform().p.y) - 16;
 
 	//Update player position in pixels
 
@@ -345,26 +352,26 @@ void Player::OnCollision(PhysBody* physA, PhysBody* physB) {
 			JumpAnim = false;
 			break;
 
-		case ColliderType::CEILING:
-			LOG("Collision CEILING");
+		case ColliderType::ENEMY:
+
+			if (app->scene->Health > 0) {
+
+				app->scene->Health--;
+			}
+			
 			break;
 
-		case ColliderType::WALL:
-			LOG("Collision WALL");
+		case ColliderType::COLLECTIBLE:
+			
+			break;
+
+		case ColliderType::HEALTH:
+
 			break;
 
 		case ColliderType::KILL:
-			LOG("Collision KILL");
+
 			Alive = false;
-			break;
-
-		case ColliderType::UNKNOWN:
-			LOG("Collision UNKNOWN");
-			break;
-
-		case ColliderType::ITEM:
-			LOG("Collision ITEM");
-			app->audio->PlayFx(pickCoinFxId);
 			break;
 	}
 	

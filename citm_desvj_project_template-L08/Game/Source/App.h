@@ -22,6 +22,7 @@ class SceneLogo;
 class SceneTitle;
 class Scene;
 class SceneDeath;
+class GuiManager;
 class EntityManager;
 class Map;
 //L07 DONE 2: Add Physics module
@@ -99,6 +100,7 @@ public:
 	Scene* scene;
 	SceneDeath* scenedeath;
 	EntityManager* entityManager;
+	GuiManager* guiManager;
 	Map* map;
 	//L07 DONE 2: Add Physics module
 	Physics* physics;

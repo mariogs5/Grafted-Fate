@@ -29,6 +29,8 @@ enum class ColliderType {
 	ATTACK,
 	DETECTION,
 	ITEM,
+	COLLECTIBLE,
+	HEALTH,
 	PLATFORM,
 	CEILING,
 	WALL,

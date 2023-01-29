@@ -13,6 +13,10 @@
 #include "Enemy.h"
 #include "Pathfinding.h"
 #include "Map.h"
+#include "SceneTitle.h"
+#include "GuiManager.h"
+#include "GuiButton.h"
+#include "GuiControl.h"
 
 Enemy::Enemy() : Entity(EntityType::ENEMY)
 {
@@ -215,7 +219,7 @@ bool Enemy::Start() {
 		pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 15, bodyType::DYNAMIC);
 		pbody->listener = this;
 		pbody->ctype = ColliderType::ENEMY;
-		Detectpbody = app->physics->CreateCircleSensor(position.x, position.y, 100, bodyType::KINEMATIC, ColliderType::ENEMY);
+		Detectpbody = app->physics->CreateCircleSensor(position.x, position.y, 100, bodyType::KINEMATIC, ColliderType::DETECTION);
 		Detectpbody->listener = this;
 	
 		currentAnimation = &run_right_walking;
@@ -227,7 +231,7 @@ bool Enemy::Start() {
 		pbody = app->physics->CreateCircle(position.x + 16, position.y + 16, 15, bodyType::KINEMATIC);
 		pbody->listener = this;
 		pbody->ctype = ColliderType::ENEMY;
-		Detectpbody = app->physics->CreateCircleSensor(position.x, position.y , 100, bodyType::KINEMATIC, ColliderType::ENEMY);
+		Detectpbody = app->physics->CreateCircleSensor(position.x, position.y , 100, bodyType::KINEMATIC, ColliderType::DETECTION);
 		Detectpbody->listener = this;
 
 		currentAnimation = &run_right_flying;
@@ -261,7 +265,8 @@ bool Enemy::Update()
 	}
 
 	// L12: Debug pathfinding
-	if (app->input->GetKey(SDL_SCANCODE_RETURN) == KEY_REPEAT) {
+	
+	if (app->scenetitle->Play->state == GuiControlState::PRESSED) {
 
 		Alive = true;
 		pbody->body->SetTransform({ PIXEL_TO_METERS(initposx),PIXEL_TO_METERS(initposy) }, 0);

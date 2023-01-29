@@ -3,6 +3,8 @@
 #include "Module.h"
 #include "Player.h"
 #include "Item.h"
+#include "GuiButton.h"
+#include "Audio.h"
 
 struct SDL_Texture;
 
@@ -35,12 +37,49 @@ public:
 
 public:
 
+	bool SettingsOn;
+
 	//L02: DONE 3: Declare a Player attribute 
 	Player* player;
 	SDL_Texture* Fondo = nullptr;
 	pugi::xml_node parameters;
 
+	SDL_Texture* play;
+	GuiButton* Play;
+
+	GuiButton* Mslider;
+	GuiButton* SFXslider;
+
 private:
 	SDL_Texture* img;
+
+	bool SincroV;
+	bool Fullscreen;
+
+	SDL_Texture* SettingsImage;
+
+	SDL_Texture* exit;
+	GuiButton* Exit;
+
+	SDL_Texture* credits;
+	GuiButton* Credits;
+
+	SDL_Texture* settings;
+	GuiButton* Settings;
+
+
+
+	SDL_Texture* back;
+	GuiButton* Back;
+
+	SDL_Texture* Slider;
+
+	SDL_Texture* Box;
+
+	GuiButton* Vsync;
+	GuiButton* Full;
+
+	SDL_Texture* Check;
+
 
 };

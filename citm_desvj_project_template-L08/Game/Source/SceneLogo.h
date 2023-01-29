@@ -3,6 +3,9 @@
 #include "Module.h"
 #include "Player.h"
 #include "Item.h"
+#include "GuiManager.h"
+#include "GuiButton.h"
+#include "Audio.h"
 
 struct SDL_Texture;
 
@@ -39,7 +42,12 @@ public:
 	Player* player;
 	SDL_Texture* Fondo = nullptr;
 
+	GuiButton* Play;
+
+	uint Jovani;
+
 private:
+
 	SDL_Texture* img;
 
 };
